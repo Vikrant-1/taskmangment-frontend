@@ -1,12 +1,14 @@
 import { useState } from "react";
 import TextInput from "../components/TextInput";
 import Button from "../components/Button";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-const LoginPage = () => {
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+const SignupPage = () => {
   const navigate = useNavigate();
+  const [email, setEmail] = useState<string>("");
+  const [firstname, setFirstname] = useState<string>("");
+  const [lastname, setLastname] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
 
   const onSubmit = () => {};
 
@@ -14,8 +16,20 @@ const LoginPage = () => {
     <div className="flex justify-center  w-full h-screen place-items-center">
       <div className="w-fit h-fit py-12 px-12 rounded-md bg-white shadow-lg hover:shadow-md ">
         <h2 className="text-indigo-600 text-center mb-4 text-lg font-medium">
-          Login to Your Account
+          Register Your Account
         </h2>
+        <TextInput
+          value={firstname}
+          onChangeValue={setFirstname}
+          label="First Name"
+          placeholder={"Enter your firstname ..."}
+        />
+        <TextInput
+          value={lastname}
+          onChangeValue={setLastname}
+          label="Last Name"
+          placeholder="Enter your lastname ..."
+        />
         <TextInput
           value={email}
           onChangeValue={setEmail}
@@ -37,14 +51,14 @@ const LoginPage = () => {
           <div className="w-1/2 h-px bg-gray-500"></div>
         </div>
         <div className="flex justify-end mt-2 text-sm">
-          <div className="">Not have a Account ?</div>
+          <div className="">Have a Account ?</div>
           <span
             onClick={() => {
-              navigate("/signup");
+              navigate("/");
             }}
             className="pl-2 text-indigo-600 font-medium cursor-pointer"
           >
-            Signup
+            Login
           </span>
         </div>
       </div>
@@ -52,4 +66,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default SignupPage;
