@@ -1,7 +1,7 @@
 import { useState } from "react";
 import TextInput from "../components/TextInput";
 import Button from "../components/Button";
-import { Navigate, useNavigate } from "react-router-dom";
+import {useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
   const [email, setEmail] = useState<string>("");
