@@ -2,6 +2,8 @@ import { useState } from "react";
 import TextInput from "../components/TextInput";
 import Button from "../components/Button";
 import { useNavigate } from "react-router-dom";
+import { zodRegisterFormSchema } from "../zodValidation/zodUserAuth";
+import { RegisterUser } from "../services/userApis";
 
 const SignupPage = () => {
   const navigate = useNavigate();
@@ -10,7 +12,30 @@ const SignupPage = () => {
   const [lastname, setLastname] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
-  const onSubmit = () => {};
+  const onSubmit = async () => {
+    try {
+      event?.preventDefault();
+      const zodCheck = zodRegisterFormSchema.safeParse({
+        username: email,
+        firstname,
+        lastname,
+        password,
+      });
+
+      if (!zodCheck.success) {
+        throw new Error(
+          zodCheck.error.message ?? "Please enter valid details."
+        );
+      }
+
+      const user = await RegisterUser({ username: email, firstname, lastname, password });
+      console.log(user);
+      
+    } catch (error) {
+      console.log(error);
+      
+    }
+  };
 
   return (
     <div className="flex justify-center  w-full h-screen place-items-center">
