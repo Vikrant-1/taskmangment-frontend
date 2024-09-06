@@ -1,5 +1,4 @@
-import axios from "axios";
-import { BASE_URI } from "../env";
+import { apiClient, API_METHODS } from "./apiClient";
 
 interface RegisterUserProps {
   username: string;
@@ -8,22 +7,16 @@ interface RegisterUserProps {
   password: string;
 }
 
-export const RegisterUser = async ({
-  username,
-  firstname,
-  lastname,
-  password,
-}: RegisterUserProps) => {
+export const RegisterUser = async (data: RegisterUserProps) => {
+  const url = `${import.meta.env.VITE_BASE_URI}/user/signup`;
   try {
-    const data = {
-      username,
-      firstname,
-      lastname,
-      password,
-    };
-    const url = `${BASE_URI()}/user/signup`;
-    await axios.post(url, data);
+    const response = await apiClient(url, API_METHODS.POST, data, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    console.log("User registered successfully:", response.data);
   } catch (error) {
-    console.log("ERROR IN REGISTER USER API : ", error);
+    console.error("Failed to register user:", error);
   }
 };
