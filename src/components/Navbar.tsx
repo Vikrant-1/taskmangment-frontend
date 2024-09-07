@@ -5,12 +5,25 @@ import TextInput from "./TextInput";
 import SearchIcon from "../assets/search-normal.png";
 import CategoryIcon from "../assets/category.png";
 import SortIcon from "../assets/sort.png";
+import { useLocation } from "react-router-dom";
+
+const PageTitle: { [key: string]: string } = {
+  "/": "Overview",
+  "/task": "Task",
+  "/team": "Team",
+  "/projects": "Projects",
+  "/message": "Messages",
+  "/settings": "Settings",
+};
 function Navbar() {
+  const location = useLocation();
   const [searchText, setSearchText] = useState("");
   return (
     <div className="bg-indigo-600 p-5">
       <div className="flex justify-between">
-        <p className="font-medium text-white text-2xl">Page Title</p>
+        <p className="font-medium text-white text-2xl">
+          {PageTitle[location.pathname]}
+        </p>
         <div className="flex">
           <div className="flex w-10 h-10 border-2 mr-5 border-[#F5F5F7] justify-center place-items-center rounded-full">
             <img src={NotificationIcon} style={{ width: 24, height: 24 }} />

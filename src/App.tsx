@@ -3,7 +3,7 @@ import AuthenticatedRoute from "./route/AuthenticatedRoute";
 import UnAuthenticatedRoute from "./route/UnAuthenticatedRoute";
 
 function App() {
-  const isUserLoggedIn = false;
+  const isUserLoggedIn = true;
   return (
     <>
       <BrowserRouter>
