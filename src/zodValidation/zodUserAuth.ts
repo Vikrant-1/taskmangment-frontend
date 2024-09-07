@@ -8,3 +8,11 @@ export const zodRegisterFormSchema = zod.object({
     .min(6, "Password must be of 6 characters.")
     .max(30, "Password must be less than 30 characters."),
 });
+
+export const zodLoginFormSchema = zod.object({
+  username: zod.string().email("Please enetr a valid email"),
+  password: zod
+    .string()
+    .min(6, "Password must be of 6 characters.")
+    .max(30, "Password must be less than 30 characters."),
+});
