@@ -4,6 +4,9 @@ import Button from "../components/Button";
 import { useNavigate } from "react-router-dom";
 import { zodRegisterFormSchema } from "../zodValidation/zodUserAuth";
 import { RegisterUser } from "../services/userApis";
+import { User } from "../types/userTypes";
+import { useSetRecoilState } from "recoil";
+import { tokenState, userState } from "../store/userAtoms";
 
 const SignupPage = () => {
   const navigate = useNavigate();
@@ -11,6 +14,8 @@ const SignupPage = () => {
   const [firstname, setFirstname] = useState<string>("");
   const [lastname, setLastname] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const setUser = useSetRecoilState(userState);
+  const setToken = useSetRecoilState(tokenState);
 
   const onSubmit = async () => {
     try {
@@ -28,12 +33,18 @@ const SignupPage = () => {
         );
       }
 
-      const user = await RegisterUser({ username: email, firstname, lastname, password });
-      console.log(user);
-      
+      const user = (await RegisterUser({
+        username: email,
+        firstname,
+        lastname,
+        password,
+      })) as User;
+      localStorage.setItem("token", user.token);
+      setUser(user);
+      setToken(user.token);
+      navigate('/');
     } catch (error) {
       console.log(error);
-      
     }
   };
 

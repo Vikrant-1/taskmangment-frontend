@@ -4,8 +4,9 @@ import DashboardTaskIcon from "../assets/dashboard-book.png";
 import DashboardTeamIcon from "../assets/dashboard-team.png";
 import DashboardMessageIcon from "../assets/dashboard-message.png";
 import DashboardSettingsIcon from "../assets/dashboard-settings.png";
-import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { useRecoilState } from "recoil";
+import { userState,tokenState } from "../store/userAtoms";
 
 interface SideBarProps {
   title: string;
@@ -49,11 +50,25 @@ const SIDEBAR_DATA: SideBarProps[] = [
 
 function Sidebar() {
   const location = useLocation();
+  const [user, setUser] = useRecoilState(userState);
+  const [token, setToken] = useRecoilState(tokenState);
+
+  const onClick = () => {
+    setUser({});
+    setToken("");
+    localStorage.removeItem("token");
+  };
+
   return (
     <div className="flex flex-col w-1/6 h-full place-items-center">
       <div className="flex flex-col place-items-center mt-10 my-3">
         <img src={AppIcon} className="w-20 h-20" />
         <p className="ml-2 text-xl font-medium mt-4">ProjectMinds</p>
+      </div>
+      <div className="flex flex-col place-items-center mt-5">
+        <p className="ml-2 text-xl font-medium mt-2">
+          Hi, {JSON.stringify(user)}
+        </p>
       </div>
       <div className="flex flex-col place-items-center mt-10">
         {SIDEBAR_DATA.map((item, index) => (
@@ -66,6 +81,14 @@ function Sidebar() {
           />
         ))}
       </div>
+      <div className="fixed bottom-0 left-0 right-0 p-4">
+        <button
+          onClick={onClick}
+          className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded"
+        >
+          Log out
+        </button>
+      </div>
     </div>
   );
 }
@@ -74,8 +97,8 @@ function SideBarItem(props: SideBarProps) {
   return (
     <Link to={props.screen}>
       <div
-        className={`flex py-2.5 px-5 mt-6 bg-${
-          props.isSelected ? "indigo-500" : "transparent"
+        className={`flex py-2.5 px-5 mt-6 ${
+          props.isSelected ? "bg-indigo-500" : "bg-transparent"
         } hover:bg-${
           props.isSelected ? "" : "indigo-100"
         } hover:cursor-pointer w-[188px] rounded-md`}

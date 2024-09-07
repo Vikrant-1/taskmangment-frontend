@@ -1,15 +1,48 @@
 import { useState } from "react";
 import TextInput from "../components/TextInput";
 import Button from "../components/Button";
-import {useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { zodLoginFormSchema } from "../zodValidation/zodUserAuth";
+import { LoginUser } from "../services/userApis";
+import { User } from "../types/userTypes";
+import { useSetRecoilState } from "recoil";
+import { tokenState, userState } from "../store/userAtoms";
 
 const LoginPage = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const setUser = useSetRecoilState(userState);
+  const setToken = useSetRecoilState(tokenState);
+
   const navigate = useNavigate();
 
-  const onSubmit = () => {};
+  const onSubmit = async () => {
+    try {
+      event?.preventDefault();
+      const zodCheck = zodLoginFormSchema.safeParse({
+        username: email,
+        password,
+      });
 
+      if (!zodCheck.success) {
+        throw new Error(
+          zodCheck.error.message ?? "Please enter valid details."
+        );
+      }
+
+      const user: User = (await LoginUser({
+        username: email,
+        password,
+      })) as User;
+      console.log(user,'user');
+      
+      localStorage.setItem("token", user.token);
+      setUser(user);
+      setToken(user.token);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div className="flex justify-center  w-full h-screen place-items-center">
       <div className="w-fit h-fit py-12 px-12 rounded-md bg-white shadow-lg hover:shadow-md ">

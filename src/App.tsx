@@ -1,13 +1,23 @@
 import { BrowserRouter } from "react-router-dom";
 import AuthenticatedRoute from "./route/AuthenticatedRoute";
 import UnAuthenticatedRoute from "./route/UnAuthenticatedRoute";
+import { useRecoilState } from "recoil";
+import { tokenState } from "./store/userAtoms.js";
+import { useEffect } from "react";
 
 function App() {
-  const isUserLoggedIn = true;
+  const [token, setToken] = useRecoilState(tokenState);
+
+  useEffect(() => {
+    if (!token) {
+      const localToken: string = localStorage.getItem("token") ?? "";
+      setToken(localToken);
+    }
+  }, []);
   return (
     <>
       <BrowserRouter>
-        {isUserLoggedIn ? <AuthenticatedRoute /> : <UnAuthenticatedRoute />}
+        {token ? <AuthenticatedRoute /> : <UnAuthenticatedRoute />}
       </BrowserRouter>
     </>
   );
