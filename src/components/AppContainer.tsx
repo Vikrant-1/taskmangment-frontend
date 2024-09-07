@@ -5,7 +5,7 @@ function AppContainer({ children }: React.PropsWithChildren) {
   return (
     <div className="flex w-full h-screen">
       <Sidebar />
-      <div className="w-full h-full bg-amber-500">
+      <div className="w-full h-full bg-gray-100">
         <Navbar />
         <div>{children}</div>
       </div>
