@@ -5,8 +5,9 @@ import DashboardTeamIcon from "../assets/dashboard-team.png";
 import DashboardMessageIcon from "../assets/dashboard-message.png";
 import DashboardSettingsIcon from "../assets/dashboard-settings.png";
 import { Link, useLocation } from "react-router-dom";
-import { useRecoilState } from "recoil";
-import { userState,tokenState } from "../store/userAtoms";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { userState, tokenState } from "../store/userAtoms";
+import { User } from "../types/userTypes";
 
 interface SideBarProps {
   title: string;
@@ -51,12 +52,12 @@ const SIDEBAR_DATA: SideBarProps[] = [
 function Sidebar() {
   const location = useLocation();
   const [user, setUser] = useRecoilState(userState);
-  const [token, setToken] = useRecoilState(tokenState);
+  const setToken = useSetRecoilState(tokenState);
 
   const onClick = () => {
     setUser({});
     setToken("");
-    localStorage.removeItem("token");
+    localStorage.clear();
   };
 
   return (
@@ -67,7 +68,7 @@ function Sidebar() {
       </div>
       <div className="flex flex-col place-items-center mt-5">
         <p className="ml-2 text-xl font-medium mt-2">
-          Hi, {JSON.stringify(user)}
+          Hi, {(user as User).firstname}
         </p>
       </div>
       <div className="flex flex-col place-items-center mt-10">

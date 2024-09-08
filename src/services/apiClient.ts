@@ -18,7 +18,11 @@ const apiClient = async <T>(
       url,
       method,
       data,
-      ...config,
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${localStorage.getItem("token")}`,
+        ...config?.headers,
+      },
     });
     return response;
   } catch (error) {

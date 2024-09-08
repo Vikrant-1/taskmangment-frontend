@@ -1,4 +1,5 @@
 import { atom } from "recoil";
+import { User } from "../types/userTypes";
 
 export const tokenState = atom<string>({
   key: "token",
@@ -7,5 +8,5 @@ export const tokenState = atom<string>({
 
 export const userState = atom({
     key: "user",
-    default:{},
+    default:{} as (User | {}),
 });

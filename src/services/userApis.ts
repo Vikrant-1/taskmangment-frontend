@@ -11,11 +11,7 @@ interface RegisterUserProps {
 export const RegisterUser = async (data: RegisterUserProps) => {
   const url = `${import.meta.env.VITE_BASE_URI}/user/signup`;
   try {
-    const response:AxiosResponse = await apiClient(url, API_METHODS.POST, data, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const response:AxiosResponse = await apiClient(url, API_METHODS.POST, data);
     if (response.data.success === true) {
       console.log("User registered successfully:", response.data);
       return response.data.data;
@@ -32,11 +28,7 @@ export const LoginUser = async (data: {
   const url = `${import.meta.env.VITE_BASE_URI}/user/login`;
 
   try {
-    const response:AxiosResponse = await apiClient(url, API_METHODS.POST, data, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const response:AxiosResponse = await apiClient(url, API_METHODS.POST, data);
     console.log(response,'response');
     
     if (response.data.success === true) {

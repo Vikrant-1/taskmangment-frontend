@@ -34,8 +34,7 @@ const LoginPage = () => {
         username: email,
         password,
       })) as User;
-      console.log(user,'user');
-      
+
       localStorage.setItem("token", user.token);
       setUser(user);
       setToken(user.token);
