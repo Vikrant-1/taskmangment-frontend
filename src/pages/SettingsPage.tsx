@@ -1,11 +1,5 @@
-import AppContainer from "../components/AppContainer";
-
 function SettingsPage() {
-  return (
-    <AppContainer>
-      <div>SettingsPage</div>
-    </AppContainer>
-  );
+  return <div>SettingsPage</div>;
 }
 
 export default SettingsPage;

@@ -1,11 +1,5 @@
-import AppContainer from "../components/AppContainer";
-
 function TaskPage() {
-  return <AppContainer>
-    <div>
-      Task Page
-    </div>
-  </AppContainer>
+  return <div>Task Page</div>;
 }
 
 export default TaskPage;

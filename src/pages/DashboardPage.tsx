@@ -1,11 +1,7 @@
-import AppContainer from "../components/AppContainer";
+
 
 function DashboardPage() {
-  return (
-    <AppContainer>
-      <div>This is Dashboard Screen</div>
-    </AppContainer>
-  );
+  return <div>This is Dashboard Screen</div>;
 }
 
 export default DashboardPage;

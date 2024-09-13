@@ -1,11 +1,5 @@
-import AppContainer from "../components/AppContainer";
-
 function MessagePage() {
-  return (
-    <AppContainer>
-      <div>MessagePage</div>
-    </AppContainer>
-  );
+  return <div>MessagePage</div>;
 }
 
 export default MessagePage;

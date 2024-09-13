@@ -122,7 +122,7 @@ function SideBarItem({
         className={`flex items-center p-3 mt-4 rounded-full transition-all duration-300 ${
           isSelected ? "bg-white" : "bg-transparent"
         } ${!isSelected && "hover:bg-gray-800"} ${
-          isCollapsed ? "justify-center" : "pl-5"
+          isCollapsed ? "justify-center place-items-center" : "pl-5"
         }`}
       >
         <Icon

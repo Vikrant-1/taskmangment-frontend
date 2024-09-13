@@ -1,11 +1,5 @@
-import AppContainer from "../components/AppContainer";
-
 function ProjectsPage() {
-  return (
-    <AppContainer>
-      <div>ProjectsPage</div>
-    </AppContainer>
-  );
+  return <div>ProjectsPage</div>;
 }
 
 export default ProjectsPage;
