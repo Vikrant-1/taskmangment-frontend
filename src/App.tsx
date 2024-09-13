@@ -10,7 +10,7 @@ function App() {
 
   useEffect(() => {
     if (!token) {
-      const localToken: string = localStorage.getItem("token") ?? ""; 
+      const localToken: string = localStorage.getItem("token") ?? "Hello"; 
       setToken(localToken);
     }
   }, []);

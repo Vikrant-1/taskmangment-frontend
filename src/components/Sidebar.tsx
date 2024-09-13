@@ -1,58 +1,41 @@
 import AppIcon from "../assets/app_icon.png";
-import DashboardOverviewIcon from "../assets/dashboard-overview.png";
-import DashboardTaskIcon from "../assets/dashboard-book.png";
-import DashboardTeamIcon from "../assets/dashboard-team.png";
-import DashboardMessageIcon from "../assets/dashboard-message.png";
-import DashboardSettingsIcon from "../assets/dashboard-settings.png";
+import AddIcon from "../assets/add_icon.png";
 import { Link, useLocation } from "react-router-dom";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 import { userState, tokenState } from "../store/userAtoms";
-import { User } from "../types/userTypes";
+import { IconType } from "react-icons";
+import { RxDashboard } from "react-icons/rx";
+import { GrTask } from "react-icons/gr";
+import { RiTeamLine } from "react-icons/ri";
+import { SlOrganization } from "react-icons/sl";
+import { TbMessages } from "react-icons/tb";
+import { CiSettings } from "react-icons/ci";
+import { useState } from "react";
+import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
+import ProjectCreateComponent from "./ProjectCreateComponent";
 
 interface SideBarProps {
   title: string;
-  icon: string;
+  icon: IconType;
   isSelected?: boolean;
   screen: string;
 }
 
 const SIDEBAR_DATA: SideBarProps[] = [
-  {
-    title: "Overview",
-    icon: DashboardOverviewIcon,
-    screen: "/",
-  },
-  {
-    title: "Task",
-    icon: DashboardTaskIcon,
-    screen: "/task",
-  },
-  {
-    title: "Team",
-    icon: DashboardTeamIcon,
-    screen: "/team",
-  },
-  {
-    title: "Projects",
-    icon: DashboardTeamIcon,
-    screen: "/projects",
-  },
-  {
-    title: "Messages",
-    icon: DashboardMessageIcon,
-    screen: "/message",
-  },
-  {
-    title: "Settings",
-    icon: DashboardSettingsIcon,
-    screen: "/settings",
-  },
+  { title: "Dashboard", icon: RxDashboard, screen: "/" },
+  { title: "Task", icon: GrTask, screen: "/task" },
+  { title: "Team", icon: RiTeamLine, screen: "/team" },
+  { title: "Projects", icon: SlOrganization, screen: "/projects" },
+  { title: "Messages", icon: TbMessages, screen: "/message" },
+  { title: "Settings", icon: CiSettings, screen: "/settings" },
 ];
 
 function Sidebar() {
   const location = useLocation();
-  const [user, setUser] = useRecoilState(userState);
+  const setUser = useSetRecoilState(userState);
   const setToken = useSetRecoilState(tokenState);
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCreateProject, setIsCreateProject] = useState(true);
 
   const onClick = () => {
     setUser({});
@@ -61,53 +44,95 @@ function Sidebar() {
   };
 
   return (
-    <div className="flex flex-col w-1/6 h-full place-items-center">
-      <div className="flex flex-col place-items-center mt-10 my-3">
-        <img src={AppIcon} className="w-20 h-20" />
-        <p className="ml-2 text-xl font-medium mt-4">ProjectMinds</p>
+    <div
+      className={`flex flex-col h-full px-4 bg-black transition-all duration-300 ${
+        isCollapsed ? "w-18" : "w-64"
+      }`}
+    >
+      {/* Toggle Collapse Button */}
+      <div className="flex justify-end p-2">
+        <button
+          onClick={() => setIsCollapsed(!isCollapsed)}
+          className="flex justify-center items-center w-8 h-8 rounded-full bg-white"
+        >
+          {isCollapsed ? (
+            <IoIosArrowForward className="w-6 h-6" />
+          ) : (
+            <IoIosArrowBack className="w-6 h-6" />
+          )}
+        </button>
       </div>
-      <div className="flex flex-col place-items-center mt-5">
-        <p className="ml-2 text-xl font-medium mt-2">
-          Hi, {(user as User).firstname}
-        </p>
+
+      {/* Sidebar Header */}
+      <div className="flex items-center w-full p-4">
+        <img src={AppIcon} className="w-8 h-8" alt="App Icon" />
+        {!isCollapsed && (
+          <p className="ml-2 text-xl font-medium text-white">ProjectMinds</p>
+        )}
       </div>
-      <div className="flex flex-col place-items-center mt-10">
+
+      {/* Create New Project Button */}
+      <button onClick={() => {
+        setIsCreateProject(true)
+      }} className="w-full mt-6">
+        <div className="flex items-center p-2 rounded-full bg-white hover:bg-gray-100">
+          <img className="w-8 h-8" src={AddIcon} alt="Add Icon" />
+          {!isCollapsed && <p className="text-sm ml-2">Create new Project</p>}
+        </div>
+      </button>
+
+      {/* Sidebar Items */}
+      <div className="flex flex-col mt-6">
         {SIDEBAR_DATA.map((item, index) => (
           <SideBarItem
-            key={index.toString()}
+            key={index}
             icon={item.icon}
             title={item.title}
             isSelected={item.screen === location.pathname}
             screen={item.screen}
+            isCollapsed={isCollapsed}
           />
         ))}
       </div>
-      <div className="fixed bottom-0 left-0 right-0 p-4">
+
+      {/* Log Out Button */}
+      <div className="flex-1 flex flex-col justify-end p-4">
         <button
           onClick={onClick}
-          className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded"
+          className="w-full py-2 bg-red-500 hover:bg-red-600 text-white rounded"
         >
           Log out
         </button>
       </div>
+      { isCreateProject && <ProjectCreateComponent isVisible={isCreateProject} setVisible={setIsCreateProject} /> }
     </div>
   );
 }
 
-function SideBarItem(props: SideBarProps) {
+function SideBarItem({
+  icon: Icon,
+  title,
+  isSelected,
+  screen,
+  isCollapsed,
+}: SideBarProps & { isCollapsed: boolean }) {
   return (
-    <Link to={props.screen}>
+    <Link to={screen} className="w-full">
       <div
-        className={`flex py-2.5 px-5 mt-6 ${
-          props.isSelected ? "bg-indigo-500" : "bg-transparent"
-        } hover:bg-${
-          props.isSelected ? "" : "indigo-100"
-        } hover:cursor-pointer w-[188px] rounded-md`}
+        className={`flex items-center p-3 mt-4 rounded-full transition-all duration-300 ${
+          isSelected ? "bg-white" : "bg-transparent"
+        } ${!isSelected && "hover:bg-gray-800"} ${
+          isCollapsed ? "justify-center" : "pl-5"
+        }`}
       >
-        <img src={props.icon} className="w-6 h-6 mr-3" />
-        <p className={`text-${props.isSelected ? "white" : "black"}`}>
-          {props.title}
-        </p>
+        <Icon
+          className={`w-6 h-6 ${isSelected ? "text-black" : "text-white"}`}
+        />
+        {!isCollapsed && (
+          <p className={`ml-3 ${isSelected ? "text-black" : "text-white"}`}>
+            {title}
+          </p>
+        )}
       </div>
     </Link>
   );
