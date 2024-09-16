@@ -1,19 +1,17 @@
 // position
 
-import React, { SetStateAction, useState } from "react";
+import { useState } from "react";
 import TextInput from "./TextInput";
-import { IoMdClose } from "react-icons/io";
 import Button from "./Button";
+import { createProjectApi } from "../services/projectApis";
+import { getUnixTime } from "date-fns";
+import { useSetRecoilState } from "recoil";
+import { projectState } from "../store/projectAtoms";
+import { zodProjectValidation } from "../zodValidation/zodProjectValidation";
+import { toast } from "react-toastify";
 
-interface ProjectCreateComponentProps {
-  isVisible: boolean;
-  setVisible: React.Dispatch<SetStateAction<boolean>>;
-}
-
-function ProjectCreateComponent({
-  isVisible,
-  setVisible,
-}: ProjectCreateComponentProps) {
+function ProjectCreateComponent() {
+  const setProject = useSetRecoilState(projectState);
   const [projectName, setProjectName] = useState("");
   const [description, setDescription] = useState("");
   const [startDate, setStartDate] = useState(new Date());
@@ -38,9 +36,31 @@ function ProjectCreateComponent({
     setShowCalender("NONE");
   };
 
-  const handleCreateProject = () => {
+  const handleCreateProject = async () => {
     try {
-    } catch (error) {}
+      const prepareData = {
+        name: projectName,
+        description: description,
+        fromDate: getUnixTime(startDate),
+        toDate: getUnixTime(endDate),
+        teams: teams,
+      };
+
+      const zodCheck = zodProjectValidation.safeParse(prepareData);
+
+      if (!zodCheck.success) {
+        toast(zodCheck.error.message, { type: "error" });
+        return;
+      }
+
+      const data = await createProjectApi(prepareData);
+      setProject(data);
+      toast("Project created successfully!!", { type: "success" });
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        toast(error.message, { type: "error" });
+      }
+    }
   };
 
   return (
@@ -49,84 +69,68 @@ function ProjectCreateComponent({
         event.stopPropagation();
         setShowCalender("NONE");
       }}
-      className="flex justify-center place-items-center absolute w-screen h-screen bg-[#00000009]"
+      className="bg-white shadow-xl p-10 rounded-md"
     >
-      <div
-        onClick={(event) => {
-          event.stopPropagation();
-          setShowCalender("NONE");
-        }}
-        className="bg-white shadow-xl p-10 rounded-md w-1/2"
-      >
-        <div className="flex place-items-center justify-between mb-6">
-          <p className="text-2xl text-bold">Create Project</p>
-          <IoMdClose
-            className="cursor-pointer"
-            size={30}
-            onClick={(event) => {
-              event.stopPropagation();
-              setVisible(false);
-            }}
-          />
-        </div>
-        <TextInput
-          label="Project Name"
-          placeholder={"What is your project called?"}
-          value={projectName}
-          onChangeValue={onChangeProjectName}
-        />
-        <div className="flex justify-between">
-          <div
-            className="w-full"
-            onClick={(event) => {
-              event.stopPropagation();
-              setShowCalender("START");
-            }}
-          >
-            <TextInput
-              label="Start Date"
-              placeholder={""}
-              value={startDate}
-              readOnly={true}
-              maxDate={new Date(endDate)}
-              showCalender={showCalender === "START"}
-              onChangeValue={onChangeStartDate}
-              isCalender={true}
-            />
-          </div>
-          <div className="w-10"></div>
-          <div
-            onClick={(event) => {
-              event.stopPropagation();
-              setShowCalender("END");
-            }}
-            className="w-full"
-          >
-            <TextInput
-              label="End Date (Deadline)"
-              placeholder={""}
-              value={endDate}
-              readOnly={true}
-              minDate={new Date(startDate)}
-              showCalender={showCalender === "END"}
-              onChangeValue={onChangeEndDate}
-              isCalender={true}
-            />
-          </div>
-        </div>
-
-        <div>
+      <div className="flex place-items-center justify-between mb-6">
+        <p className="text-2xl text-bold">Create Project</p>
+      </div>
+      <TextInput
+        label="Project Name"
+        placeholder={"What is your project called?"}
+        value={projectName}
+        onChangeValue={onChangeProjectName}
+      />
+      <div className="flex justify-between">
+        <div
+          className="w-full"
+          onClick={(event) => {
+            event.stopPropagation();
+            setShowCalender("START");
+          }}
+        >
           <TextInput
-            label="Notes"
-            placeholder={"Describe the project (e.g., develop a new website)"}
-            value={description}
-            onChangeValue={onChangeProjectDescription}
-            istextArea={true}
+            label="Start Date"
+            placeholder={""}
+            value={startDate}
+            readOnly={true}
+            maxDate={new Date(endDate)}
+            showCalender={showCalender === "START"}
+            onChangeValue={onChangeStartDate}
+            isCalender={true}
           />
         </div>
-        <div className="flex justify-center mt-10">
-          <Button title="CREATE" onClick={handleCreateProject} />
+        <div className="w-10"></div>
+        <div
+          onClick={(event) => {
+            event.stopPropagation();
+            setShowCalender("END");
+          }}
+          className="w-full"
+        >
+          <TextInput
+            label="End Date (Deadline)"
+            placeholder={""}
+            value={endDate}
+            readOnly={true}
+            minDate={new Date(startDate)}
+            showCalender={showCalender === "END"}
+            onChangeValue={onChangeEndDate}
+            isCalender={true}
+          />
         </div>
+      </div>
+
+      <div>
+        <TextInput
+          label="Notes"
+          placeholder={"Describe the project (e.g., develop a new website)"}
+          value={description}
+          onChangeValue={onChangeProjectDescription}
+          istextArea={true}
+        />
+      </div>
+      <div className="flex justify-center mt-10">
+        <Button title="CREATE" onClick={handleCreateProject} />
       </div>
     </div>
   );

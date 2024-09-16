@@ -1,7 +1,10 @@
+import { ButtonIcon } from "../components/Atomic/Buttons";
 
 
 function DashboardPage() {
-  return <div>This is Dashboard Screen</div>;
+  return <div>
+    <ButtonIcon title="Button" />
+  </div>;
 }
 
 export default DashboardPage;
