@@ -6,6 +6,7 @@ import TeamPage from "../pages/TeamPage";
 import SettingsPage from "../pages/SettingsPage";
 import ProjectsPage from "../pages/ProjectsPage";
 import AppContainer from "../components/AppContainer";
+import CreateProjectPage from "../pages/CreateProjectPage";
 
 function AuthenticatedRoute() {
   return (
@@ -17,6 +18,7 @@ function AuthenticatedRoute() {
         <Route path="/projects" element={<ProjectsPage />} />
         <Route path="/message" element={<MessagePage />} />
         <Route path="/settings" element={<SettingsPage />} />
+        <Route path="/createproject" element={<CreateProjectPage />} />
       </Routes>
     </AppContainer>
   );
