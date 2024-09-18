@@ -54,8 +54,10 @@ function ProjectCreateComponent() {
       }
 
       const data = await createProjectApi(prepareData);
+      if (data) {
+        toast("Project created successfully!!", { type: "success" });
+      }
       setProject(data);
-      toast("Project created successfully!!", { type: "success" });
     } catch (error: unknown) {
       if (error instanceof Error) {
         toast(error.message, { type: "error" });
